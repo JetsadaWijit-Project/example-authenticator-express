@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
   users.push({ username, password: hashedPassword, secret: secret.base32 });
   saveUsers(users);
 
-  res.render('login')
+  res.render('login');
 });
 
 module.exports = router;
