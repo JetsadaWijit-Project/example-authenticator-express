@@ -11,12 +11,30 @@ const generateQRCode = async (text) => {
   }
 };
 
-const verifyToken = (secret, token) => {
-  return speakeasy.totp.verify({
-    secret,
-    encoding: 'base32',
-    token,
-  });
+const generateRandomString = (length) => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let result = '';
+
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
 };
 
-module.exports = { generateQRCode, verifyToken };
+const verifyToken = (secret, token) => {
+  try {
+    return speakeasy.totp.verify({
+      secret,
+      encoding: 'base32',
+      token,
+      window: 1, // Adjust window as needed (e.g., 1 allows ±30 seconds)
+    });
+  } catch (error) {
+    console.error('Error verifying token:', error);
+    return false;
+  }
+};
+
+module.exports = { generateQRCode, generateRandomString, verifyToken };

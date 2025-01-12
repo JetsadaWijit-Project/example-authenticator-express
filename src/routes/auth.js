@@ -4,9 +4,8 @@ const { verifyToken } = require('../utils/authUtils');
 const { loadUsers } = require('../utils/fileHandler');
 
 router.get('/', (req, res) => {
-  res.render('index', { dataUrl, username });
+  res.render('index');
 });
-
 
 router.post('/authenticate', (req, res) => {
   const { username, token } = req.body;
