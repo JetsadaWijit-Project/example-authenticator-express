@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { loadUsers } = require('../utils/fileHandler');
+const { loadUsers, saveUsers } = require('../utils/fileHandler');
 const { generateQRCode } = require('../utils/authUtils');
 const speakeasy = require('speakeasy');
 
@@ -18,24 +18,27 @@ router.post('/', async (req, res) => {
 
   try {
     const users = loadUsers();
-    const user = users.find((u) => u.username === username);
+    const userIndex = users.findIndex((u) => u.username === username);
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (userIndex === -1 || !(await bcrypt.compare(password, users[userIndex].password))) {
       return res.status(401).send('Invalid username or password!');
     }
 
-    // Generate a unique token using speakeasy
-    const secret = speakeasy.generateSecret();
+    // Reuse existing secret or generate a new one
+    let user = users[userIndex];
+    if (!user.secret) {
+      const secret = speakeasy.generateSecret();
+      user.secret = secret.base32;
+      users[userIndex] = user;
+      saveUsers(users); // Save updated user data
+    }
+
     const token = speakeasy.totp({
-      secret: secret.base32,
+      secret: user.secret,
       encoding: 'base32',
     });
 
-    // Save the secret to the user's record
-    user.secret = secret.base32;
-
     // Console log the secret and token for testing
-    console.log(`Generated Secret: ${secret.base32}`);
     console.log(`Generated Token: ${token}`);
 
     // Generate a QR code for the token

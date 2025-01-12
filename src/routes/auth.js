@@ -12,14 +12,16 @@ router.post('/authenticate', (req, res) => {
   const users = loadUsers();
   const user = users.find((u) => u.username === username);
 
-  if (!user) return res.send('User not found!');
+  if (!user || !user.secret) {
+    return res.status(401).send('User not found or no token registered!');
+  }
 
   const isVerified = verifyToken(user.secret, token);
 
   if (isVerified) {
     res.send('Authentication successful!');
   } else {
-    res.send('Invalid token!');
+    res.status(403).send('Invalid token!');
   }
 });
 
