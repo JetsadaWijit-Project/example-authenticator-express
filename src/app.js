@@ -2,6 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
+const { ensureFileExists } = require('./utils/fileHandler')
+
+// Define the file path
+const filePath = path.join(__dirname, 'data', 'users.json');
+
+// Ensure the file exists
+ensureFileExists(filePath);
+
 const app = express();
 
 const hostUrl = process.env.HOST_URL || "localhost";
