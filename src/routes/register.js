@@ -23,10 +23,7 @@ router.post('/', async (req, res) => {
   users.push({ username, password: hashedPassword, secret: secret.base32 });
   saveUsers(users);
 
-  qrcode.toDataURL(secret.otpauth_url, (err, dataUrl) => {
-    if (err) return res.status(500).send('Error generating QR code');
-    res.render('auth', { username, dataUrl });
-  });
+  res.render('login')
 });
 
 module.exports = router;
