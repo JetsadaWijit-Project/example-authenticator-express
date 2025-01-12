@@ -1,6 +1,5 @@
 {
     "name": "Container",
-    "image": "mcr.microsoft.com/devcontainers/javascript-node:18-bullseye",
     "features": {
       "ghcr.io/devcontainers-contrib/features/jshint:2": {}
     },
