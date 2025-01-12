@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
     });
 
     // Console log the secret and token for testing
-    console.log(`Generated Token: ${token}`);
+    //console.log(`Generated Token: ${token}`);
 
     // Generate a QR code for the token
     const dataUrl = await generateQRCode(token);
